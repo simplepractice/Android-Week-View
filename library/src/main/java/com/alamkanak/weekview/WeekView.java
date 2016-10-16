@@ -81,6 +81,7 @@ public class WeekView extends View {
     private Paint mNowLinePaint;
     private Paint mTodayHeaderTextPaint;
     private Paint mEventBackgroundPaint;
+    private Paint mEventBorderPaint;
     private float mHeaderColumnWidth;
     private List<EventRect> mEventRects;
     private List<? extends WeekViewEvent> mPreviousPeriodEvents;
@@ -128,6 +129,7 @@ public class WeekView extends View {
     private int mEventTextColor = Color.BLACK;
     private int mEventPadding = 8;
     private int mHeaderColumnBackgroundColor = Color.WHITE;
+    private int mBorderWidth = 2;
     private boolean mIsFirstDraw = true;
     private boolean mAreDimensionsInvalid = true;
     @Deprecated private int mDayNameLength = LENGTH_LONG;
@@ -341,6 +343,7 @@ public class WeekView extends View {
             mEventTextColor = a.getColor(R.styleable.WeekView_eventTextColor, mEventTextColor);
             mEventPadding = a.getDimensionPixelSize(R.styleable.WeekView_eventPadding, mEventPadding);
             mHeaderColumnBackgroundColor = a.getColor(R.styleable.WeekView_headerColumnBackground, mHeaderColumnBackgroundColor);
+            mBorderWidth = a.getDimensionPixelSize(R.styleable.WeekView_borderWidth, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mBorderWidth, context.getResources().getDisplayMetrics()));
             mDayNameLength = a.getInteger(R.styleable.WeekView_dayNameLength, mDayNameLength);
             mOverlappingEventGap = a.getDimensionPixelSize(R.styleable.WeekView_overlappingEventGap, mOverlappingEventGap);
             mEventMarginVertical = a.getDimensionPixelSize(R.styleable.WeekView_eventMarginVertical, mEventMarginVertical);
@@ -429,6 +432,10 @@ public class WeekView extends View {
         // Prepare event background color.
         mEventBackgroundPaint = new Paint();
         mEventBackgroundPaint.setColor(Color.rgb(174, 208, 238));
+
+        // Prepare event border color.
+        mEventBorderPaint = new Paint();
+        mEventBorderPaint.setColor(Color.TRANSPARENT);
 
         // Prepare header column background color.
         mHeaderColumnBackgroundPaint = new Paint();
@@ -804,10 +811,14 @@ public class WeekView extends View {
                             right > mHeaderColumnWidth &&
                             bottom > mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom
                             ) {
-                        mEventRects.get(i).rectF = new RectF(left, top, right, bottom);
                         mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
+                        mEventRects.get(i).setRectF(new RectF(left, top, right, bottom));
                         canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
+
                         drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
+
+                        mEventBorderPaint.setColor(mEventRects.get(i).event.getBorderColor() == 0 ? Color.argb(0, 0, 0, 0) : mEventRects.get(i).event.getBorderColor());
+                        canvas.drawRect(mEventRects.get(i).borderRectF, mEventBorderPaint);
                     }
                     else
                         mEventRects.get(i).rectF = null;
@@ -928,6 +939,7 @@ public class WeekView extends View {
         public WeekViewEvent event;
         public WeekViewEvent originalEvent;
         public RectF rectF;
+        public RectF borderRectF;
         public float left;
         public float width;
         public float top;
@@ -947,7 +959,13 @@ public class WeekView extends View {
         public EventRect(WeekViewEvent event, WeekViewEvent originalEvent, RectF rectF) {
             this.event = event;
             this.rectF = rectF;
+            this.borderRectF = new RectF(0, 0, 0, 0);
             this.originalEvent = originalEvent;
+        }
+
+        public void setRectF(RectF rectF) {
+            this.rectF = rectF;
+            this.borderRectF = new RectF(rectF.left, rectF.top, rectF.left + mBorderWidth, rectF.bottom);
         }
     }
 

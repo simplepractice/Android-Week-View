@@ -34,6 +34,7 @@
             <enum name="length_short" value="1"/>
             <enum name="length_long" value="2"/>
         </attr>
+        <attr name="borderWidth" format="dimension" />
         <attr name="overlappingEventGap" format="dimension"/>
         <attr name="eventMarginVertical" format="dimension"/>
         <attr name="xScrollingSpeed" format="float"/>
