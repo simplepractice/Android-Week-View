@@ -811,8 +811,9 @@ public class WeekView extends View {
                             right > mHeaderColumnWidth &&
                             bottom > mHeaderHeight + mHeaderRowPadding * 2 + mTimeTextHeight / 2 + mHeaderMarginBottom
                             ) {
-                        mEventBackgroundPaint.setColor(mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor());
                         mEventRects.get(i).setRectF(new RectF(left, top, right, bottom));
+
+                        mEventBackgroundPaint.setColor(alphaColor(192, mEventRects.get(i).event.getColor() == 0 ? mDefaultEventColor : mEventRects.get(i).event.getColor()));
                         canvas.drawRoundRect(mEventRects.get(i).rectF, mEventCornerRadius, mEventCornerRadius, mEventBackgroundPaint);
 
                         drawEventTitle(mEventRects.get(i).event, mEventRects.get(i).rectF, canvas, top, left);
@@ -926,6 +927,10 @@ public class WeekView extends View {
             textLayout.draw(canvas);
             canvas.restore();
         }
+    }
+
+    private int alphaColor(int alpha, int color) {
+        return Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color));
     }
 
 
