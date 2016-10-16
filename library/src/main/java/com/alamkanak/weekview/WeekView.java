@@ -884,6 +884,8 @@ public class WeekView extends View {
         if (rect.right - rect.left - mEventPadding * 2 < 0) return;
         if (rect.bottom - rect.top - mEventPadding * 2 < 0) return;
 
+        mEventTextPaint.setColor((event.getTextColor() == 0) ? mEventTextColor : event.getTextColor());
+
         // Prepare the name of the event.
         SpannableStringBuilder bob = new SpannableStringBuilder();
         if (event.getName() != null) {

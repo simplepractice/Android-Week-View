@@ -19,6 +19,7 @@ public class WeekViewEvent {
     private int mColor;
     private boolean mAllDay;
     private int mBorderColor;
+    private int mTextColor;
 
     public WeekViewEvent(){
 
@@ -164,6 +165,15 @@ public class WeekViewEvent {
     public void setBorderColor(int borderColor) {
         this.mBorderColor = borderColor;
     }
+
+    public int getTextColor() {
+        return mTextColor;
+    }
+
+    public void setTextColor(int textColor) {
+        this.mTextColor = textColor;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
